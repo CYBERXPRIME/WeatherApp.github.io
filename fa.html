@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- ... (Your existing head content) ... -->
+    <style>
+      .weather,
+      .error {
+        display: none;
+      }
+      /* Define the cloudy background class */
+      .cloudy-bg {
+        background-image: url('images/cloudy.jpg'); /* Replace with your cloudy background image path */
+      }
+    </style>
+  </head>
+  <body
+    class="backgroundIcon h-[100vh] m-0 p-0 font-['Poppins', sans-serif] backdrop-blur-[10px] bg-center bg-[url('https://picsum.photos/1920/1080/?landscape')] box-border bg-[#222] flex justify-center items-center overscroll-none"
+  >
+    <!-- ... (Your existing HTML content) ... -->
+
+    <script>
+      // ... (Your existing JavaScript code) ...
+
+      async function checkWeather(city) {
+        // ... (Your existing code for fetching weather data) ...
+
+        if (data.weather[0].main == "Clouds") {
+          weatherIcon.src = "images/images/clouds.png";
+          background.classList.add("cloudy-bg"); // Add cloudy background class
+        } else {
+          // Handle other weather conditions here
+          switch (data.weather[0].main) {
+            case "Clear":
+              weatherIcon.src = "images/images/clear.png";
+              break;
+            case "Rain":
+              weatherIcon.src = "images/images/rain.png";
+              break;
+            case "Drizzle":
+              weatherIcon.src = "images/images/drizzle.png";
+              break;
+            case "Mist":
+              weatherIcon.src = "images/images/mist.png";
+              break;
+            default:
+              weatherIcon.src = "images/images/default.png"; // Default weather icon
+              break;
+          }
+          background.classList.remove("cloudy-bg"); // Remove cloudy background class for other conditions
+        }
+
+        // ... (Your existing code to display weather data) ...
+      }
+
+      // ... (Your existing event listeners) ...
+    </script>
+  </body>
+</html>

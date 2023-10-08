@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <link
+      rel="shortcut icon"
+      href="images/images/clouds.png"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .weather,
+      .error {
+        display: none;
+      }
+    </style>
+  </head>
+  <body
+    class="backgroundIcon h-[100vh] m-0 p-0 font-['Poppins', sans-serif] backdrop-blur-[10px] bg-center bg-[url('https://picsum.photos/1920/1080/?landscape')] box-border bg-[#222] flex justify-center items-center overscroll-none"
+  >
+    <div
+      class="card w-[90%] max-w-[470px] bg-[rgb(255,255,255,0.5)] backdrop-blur-[100px] text-[#fff] my-[50px] mx-auto rounded-[20px] py-[30px] px-[35px] text-center"
+    >
+      <div class="search w-[100%] flex items-center justify-between">
+        <input
+          type="text"
+          placeholder="Enter city Name"
+          spellcheck="false"
+          class="border-none outline-none text-[#ebfffc] bg-[#555] py-[10px] px-[25px] h-16 rounded-[30px] flex-[1] mr-[16px] font-[18px]"
+        />
+        <button
+          class="border-none outline-none bg-[#222] hover:bg-[#555] rounded-[50%] w-[60px] h-[60px] cursor-pointer flex justify-center items-center"
+        >
+          <img src="images/images/search.png" class="w-[16px]" />
+        </button>
+      </div>
+      <div class="error">
+        <p class="text-left ml-2.5 text-[14px] mt-10px">Invalid City Name</p>
+      </div>
+      <div class="weather flex justify-center items-center flex-col">
+        <div
+          class="weather-icon mx-auto w-[170px] mt-[20px] flex items-center justify-center"
+        >
+          <img src="images/images/rain.png" class="w-full" />
+        </div>
+
+        <h1 class="temp text-[80px] font-[500]">22°C</h1>
+        <h2 class="city text-[45px] font-[400] mt-[-10px]">New York</h2>
+        <div
+          class="details w-full flex justify-between items-center py-0 px-[20px] mt-[30px]"
+        >
+          <div class="col flex items-center text-center">
+            <img
+              src="images/images/humidity.png"
+              class="w-[50px] mr-2.5"
+              alt=""
+            />
+            <div>
+              <p class="humidity text-[28px] mt-[-6px]">50%</p>
+              <p>Humidity</p>
+            </div>
+          </div>
+          <div class="col flex items-center text-center">
+            <img src="images/images/wind.png" alt="" class="w-[50px] mr-2.5" />
+            <div>
+              <p class="wind text-[28px] mt-[-6px]">15Km/hr</p>
+              <p>Wind Speed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const apiKey = "e68fc68841fed0a39d5056f5f0d6ac07";
+      const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=`;
+
+      const searchBox = document.querySelector(".search input");
+      const searchBtn = document.querySelector(".search button");
+      const weatherIcon = document.querySelector(".weather-icon");
+      const background = document.querySelector(".backgroundIcon")
+
+      async function checkWeather(city) {
+        const response = await fetch(
+          apiUrl + city + `&appid=${apiKey}&units=metric`
+        );
+
+        if (response.status == 404) {
+          document.querySelector(".error").style.display = "block";
+          document.querySelector(".weather").style.display = "none";
+        } else {
+          var data = await response.json();
+          console.log(data);
+
+          document.querySelector(".city").innerHTML = data.name;
+          /* document.querySelector(".temp").innerHTML = data.main.temp +"°C"; */
+          document.querySelector(".temp").innerHTML =
+            Math.round(data.main.temp.toFixed(2)) + "°C";
+          document.querySelector(".humidity").innerHTML =
+            data.main.humidity + "%";
+          document.querySelector(".wind").innerHTML = data.wind.speed + "Km/hr";
+/*           document.body.style.backgroundImage =
+            "url('https://picsum.photos/1920/1080/? " + city + "')"; */
+
+          if (data.weather[0].main == "Clouds") {
+            weatherIcon.src = "images/images/clouds.png";
+            background.src = "images/cloudy.jpg";
+          }
+          if (data.weather[0].main == "Clear") {
+            weatherIcon.src = "images/images/clear.png";
+            background.src = "images/clear.jpg";
+          }
+          if (data.weather[0].main == "Rain") {
+            weatherIcon.src = "images/images/rain.png";
+            background.src = "images/rain.jpg";
+          }
+          if (data.weather[0].main == "Drizzle") {
+            weatherIcon.src = "images/images/drizzle.png";
+            background.src = "images/drizzle.jpg";
+          }
+          if (data.weather[0].main == "Mist") {
+            weatherIcon.src = "images/images/mist.png";
+            background.src = "images/mist.jpg";
+          }
+
+          document.querySelector(".weather").style.display = "block";
+          document.querySelector(".error").style.display = "none";
+        }
+      }
+
+      searchBtn.addEventListener("click", () => {
+        checkWeather(searchBox.value);
+      });
+      document
+        .querySelector(".search button")
+        .addEventListener("click", function () {
+          checkWeather(searchBox.value);
+        });
+      document
+        .querySelector(".search input")
+        .addEventListener("keyup", function (event) {
+          if (event.key == "Enter") {
+            checkWeather(searchBox.value);
+          }
+        });
+    </script>
+  </body>
+</html>
